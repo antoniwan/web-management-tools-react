@@ -34,19 +34,11 @@ export default function UploadFile(props) {
         >
           CSV format
         </a>
-        . If you don't know the format, please{" "}
-        <a
-          href={process.env.PUBLIC_URL + "example/example-format-csv.csv"}
-          target="_blank"
-          download="example-format.csv"
-          rel="noreferrer"
-        >
-          download it here
-        </a>
-        !{" "}
+        .{" "}
         <em>
-          Important: this tool will <strong>NOT SAVE</strong> your files or the
-          results.
+          Important: This tool will <strong>NOT STORE</strong> imported or
+          analyzed files. Meaning, it won't save history!{" "}
+          <u>Please download the report once it's generated (next page)!</u>
         </em>
       </p>
       <Divider />

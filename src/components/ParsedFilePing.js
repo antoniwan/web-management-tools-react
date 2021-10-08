@@ -40,17 +40,18 @@ export default function ParsedFilePing(props) {
         )}
         {complete && (
           <>
-            Check completed!!!
+            Check completed!!!{" "}
             <CSVDownloader
               data={tableData.map((element, index) => {
                 return {
-                  URL: element.data.url,
-                  STATUS: element.data.status,
-                  "RESPONSE CODE": element.data.responseCode,
-                  "ASSET TYPE": element.data.assetType,
+                  url: element.data.url,
+                  status: element.data.status,
+                  "response code": element.data.responseCode,
+                  "asset type": element.data.assetType,
                 };
               })}
               type="button"
+              className="bp3-button bp3-large bg3-intent-primary"
               filename={`url-status-checker-report-${Date.now()}`}
               bom={true}
               config={{
@@ -58,7 +59,7 @@ export default function ParsedFilePing(props) {
                 skipEmptyLines: true,
               }}
             >
-              download the report now!
+              Download the report now!
             </CSVDownloader>
           </>
         )}
