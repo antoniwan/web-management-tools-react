@@ -13,6 +13,7 @@ export default class App extends Component {
       step: 0,
       data: null,
       processing: false,
+      complete: false,
     };
   }
 
@@ -41,71 +42,61 @@ export default class App extends Component {
     });
 
     // Traverse through each URL
-    console.log(`Traverse through each URL`, this.state.data);
 
     const tableDataNow = this.state.data;
 
-    await tableDataNow.forEach(async (element, index) => {
-      // Set the spinner for each URL
-      const updatedData = {
-        url: element.data.url,
-        responseCode: null,
-        assetType: null,
-        status: null,
-      };
+    let forEachResolved = new Promise((resolve, reject) => {
+      tableDataNow.forEach(async (element, index, array) => {
+        // Set the spinner for each URL
+        const updatedData = {
+          url: element.data.url,
+          responseCode: null,
+          assetType: null,
+          status: null,
+        };
 
-      await this.setState((this.state.data[index].data = updatedData));
+        await this.setState((this.state.data[index].data = updatedData));
 
-      // Do an axios GET call
-      console.log("Doing the GET REQUESTS!!!", element);
+        // Do an axios GET call
+        await axios
+          .get(element.data.url, {
+            timeout: 10000,
+          })
+          .then(async (response) => {
+            const responseData = {
+              url: element.data.url,
+              responseCode: response.status,
+              assetType: response.headers["content-type"],
+              status:
+                response.status === 200 ||
+                response.status === 301 ||
+                response.status === 307 ||
+                response.status === 308
+                  ? "Online"
+                  : "Offline",
+            };
+            await this.setState((this.state.data[index].data = responseData));
+          })
+          .catch(async (error) => {
+            console.log(`Error found for ${element.data.url}:`, error);
+            const responseData = {
+              url: element.data.url,
+              responseCode: error?.response?.status || "unknown",
+              assetType: "unknown",
+              status: "Offline",
+            };
+            await this.setState((this.state.data[index].data = responseData));
+          });
 
-      axios
-        .get(element.data.url, {
-          timeout: 1000,
-        })
-        .then(async (response) => {
-          const responseData = {
-            url: element.data.url,
-            responseCode: response.status,
-            assetType: response.headers["content-type"],
-            status:
-              response.status === 200 ||
-              response.status === 301 ||
-              response.status === 307 ||
-              response.status === 308
-                ? "Online"
-                : "Offline",
-          };
-          await this.setState((this.state.data[index].data = responseData));
-        })
-        .catch(async (error) => {
-          const responseData = {
-            url: element.data.url,
-            responseCode: error?.response?.status || "unknown",
-            assetType: "unknown",
-            status: "Offline",
-          };
-          await this.setState((this.state.data[index].data = responseData));
-        });
+        if (index === array.length - 1) resolve();
+      });
+    });
 
-      // await axios.get(element.data.url).then(async (response) => {
-      //   console.log(`Response for ${element.data.url}`, response);
-      //   const responseData = {
-      //     url: element.data.url,
-      //     responseCode: response.status,
-      //     assetType: response.headers["content-type"],
-      //     status:
-      //       response.status === 200 ||
-      //       response.status === 301 ||
-      //       response.status === 307 ||
-      //       response.status === 308
-      //         ? "Online"
-      //         : "Offline",
-      //   };
-
-      //   await this.setState((this.state.data[index].data = responseData));
-      // });
-      // Destroy the Spinner and return the response
+    forEachResolved.then(async () => {
+      await this.setState({
+        processing: false,
+        complete: true,
+      });
     });
   };
 
@@ -132,6 +123,7 @@ export default class App extends Component {
               tableData={this.state.data}
               handleStartChecking={this.handleStartChecking}
               processing={this.state.processing}
+              complete={this.state.complete}
             />
           )}
         </main>

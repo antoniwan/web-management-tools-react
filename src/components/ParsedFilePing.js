@@ -21,10 +21,6 @@ export default function ParsedFilePing(props) {
           {element.data.responseCode === null && <CustomSpinner />}
           {element.data.responseCode && <>{element.data.responseCode}</>}
         </td>
-        <td>
-          {element.data.assetType === null && <CustomSpinner />}
-          {element.data.assetType && <>{element.data.assetType}</>}
-        </td>
       </tr>
     );
   });
@@ -50,7 +46,6 @@ export default function ParsedFilePing(props) {
               <th>URL</th>
               <th>Status</th>
               <th>Response Code</th>
-              <th>Asset Type</th>
             </tr>
           </thead>
           <tbody>{Rows}</tbody>
