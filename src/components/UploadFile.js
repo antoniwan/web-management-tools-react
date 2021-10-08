@@ -4,27 +4,22 @@ import { Divider, Button, Card, ButtonGroup } from "@blueprintjs/core";
 
 const buttonRef = React.createRef();
 
-export default function UploadFile() {
+export default function UploadFile(props) {
+  const { handleOnFileLoad, handleOnProceedWithCSV } = props;
+
   function handleOpenDialog(e) {
     if (buttonRef.current) {
       buttonRef.current.open(e);
     }
   }
 
-  function handleOnFileLoad(data) {
-    console.log(data);
-  }
-
   function handleOnError(err, file, inputElement, reason) {
     console.log(err, file, inputElement, reason);
+    alert(reason);
   }
 
   function handleOnRemoveFile(e) {
     buttonRef.current.removeFile(e);
-  }
-
-  function handleProceed(data) {
-    console.log(data);
   }
 
   return (
@@ -63,6 +58,9 @@ export default function UploadFile() {
           onError={handleOnError}
           noDrag
           addRemoveButton
+          config={{
+            header: true,
+          }}
         >
           {({ file }) => (
             <ButtonGroup large={true} vertical={true}>
@@ -82,7 +80,7 @@ export default function UploadFile() {
                     text={`Proceed with the selected file: ${
                       file && file.name
                     }`}
-                    onClick={handleProceed}
+                    onClick={handleOnProceedWithCSV}
                     rightIcon="arrow-right"
                   />
                   <Button

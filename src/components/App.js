@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import WMTNavbar from "./WMTNavbar";
 import GetStarted from "./GetStarted";
 import UploadFile from "./UploadFile";
+import ParsedFilePing from "./ParsedFilePing";
 import "./App.css";
 
 export default class App extends Component {
@@ -9,7 +10,8 @@ export default class App extends Component {
     super(props);
     this.state = {
       step: 0,
-      file: null,
+      data: null,
+      processing: false,
     };
   }
 
@@ -19,9 +21,36 @@ export default class App extends Component {
     });
   };
 
-  handleClickUploadFile = () => {};
+  handleOnFileLoad = (data) => {
+    this.setState({
+      data: data,
+    });
+  };
 
-  handleClickResetUpload = () => {};
+  handleOnProceedWithCSV = () => {
+    this.setState({
+      step: 2,
+    });
+  };
+
+  handleStartChecking = async () => {
+    this.setState({
+      processing: true,
+    });
+
+    // Traverse through each URL
+    console.log(`Traverse through each URL`, this.state.data);
+    const tableDataNow = this.state.data;
+    tableDataNow.forEach((element) => {
+      console.log(element);
+      // Set value to spinners!
+      this.setState({});
+    });
+    // Set the spinner for each URL
+
+    // Do an axios GET call
+    // Destroy the Spinner and return the response
+  };
 
   render() {
     return (
@@ -36,8 +65,16 @@ export default class App extends Component {
 
           {this.state.step === 1 && (
             <UploadFile
-              handleClickUpload={this.handleClickUploadFile}
-              handleClickReset={this.handleClickResetUpload}
+              handleOnFileLoad={this.handleOnFileLoad}
+              handleOnProceedWithCSV={this.handleOnProceedWithCSV}
+            />
+          )}
+
+          {this.state.step === 2 && (
+            <ParsedFilePing
+              tableData={this.state.data}
+              handleStartChecking={this.handleStartChecking}
+              processing={this.state.processing}
             />
           )}
         </main>
