@@ -2,16 +2,28 @@ import React from "react";
 import { Button, Card, Divider, Spinner } from "@blueprintjs/core";
 
 export default function ParsedFilePing(props) {
-  const { tableData, handleStartChecking, onUpdateData, processing } = props;
+  const { tableData, handleStartChecking, processing } = props;
 
   const Rows = tableData.map((element) => {
-    console.log(element);
     return (
       <tr key={element.data.url}>
-        <td>{element.data.url}</td>
-        <td>{element.data.status || null}</td>
-        <td>{element.data.responseCode || null}</td>
-        <td>{element.data.assetType || null}</td>
+        <td>
+          <a href={element.data.url} target="_blank" rel="noreferrer">
+            {element.data.url}
+          </a>
+        </td>
+        <td>
+          {element.data.status === null && <CustomSpinner />}
+          {element.data.status && <>{element.data.status}</>}
+        </td>
+        <td>
+          {element.data.responseCode === null && <CustomSpinner />}
+          {element.data.responseCode && <>{element.data.responseCode}</>}
+        </td>
+        <td>
+          {element.data.assetType === null && <CustomSpinner />}
+          {element.data.assetType && <>{element.data.assetType}</>}
+        </td>
       </tr>
     );
   });
@@ -44,4 +56,8 @@ export default function ParsedFilePing(props) {
       </div>
     </Card>
   );
+}
+
+function CustomSpinner() {
+  return <Spinner size={20} />;
 }

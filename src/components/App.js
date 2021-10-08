@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 import WMTNavbar from "./WMTNavbar";
 import GetStarted from "./GetStarted";
 import UploadFile from "./UploadFile";
@@ -33,35 +34,50 @@ export default class App extends Component {
     });
   };
 
-  handleOnUpdateData = () => {
-    this.setState({
+  handleStartChecking = async () => {
+    // Set processing to true!
+    await this.setState({
       processing: true,
     });
-  };
 
-  handleStartChecking = async () => {
     // Traverse through each URL
     console.log(`Traverse through each URL`, this.state.data);
 
     const tableDataNow = this.state.data;
 
     await tableDataNow.forEach(async (element, index) => {
-      console.log(index, element);
-      // Set value to spinners!
-
+      // Set the spinner for each URL
       const updatedData = {
         url: element.data.url,
-        responseCode: 666,
-        assetType: "unknown",
-        status: "Online",
+        responseCode: null,
+        assetType: null,
+        status: null,
       };
 
       await this.setState((this.state.data[index].data = updatedData));
-    });
-    // Set the spinner for each URL
 
-    // Do an axios GET call
-    // Destroy the Spinner and return the response
+      // Do an axios GET call
+      console.log("Doing the GET REQUESTS!!!", element);
+
+      await axios.get(element.data.url).then(async (response) => {
+        console.log(`Response for ${element.data.url}`, response);
+        const responseData = {
+          url: element.data.url,
+          responseCode: response.status,
+          assetType: response.headers["content-type"],
+          status:
+            response.status === 200 ||
+            response.status === 301 ||
+            response.status === 307 ||
+            response.status === 308
+              ? "Online"
+              : "Offline",
+        };
+
+        await this.setState((this.state.data[index].data = responseData));
+      });
+      // Destroy the Spinner and return the response
+    });
   };
 
   render() {
@@ -84,7 +100,6 @@ export default class App extends Component {
 
           {this.state.step === 2 && (
             <ParsedFilePing
-              onUpdateData={this.handleOnUpdateData}
               tableData={this.state.data}
               handleStartChecking={this.handleStartChecking}
               processing={this.state.processing}
