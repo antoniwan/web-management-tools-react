@@ -40,7 +40,7 @@ export default function ParsedFilePing(props) {
         )}
         {complete && (
           <>
-            Check completed, download report now!
+            Check completed!!!
             <CSVDownloader
               data={tableData.map((element, index) => {
                 return {
@@ -51,14 +51,14 @@ export default function ParsedFilePing(props) {
                 };
               })}
               type="button"
-              filename={`url-checker`}
+              filename={`url-status-checker-report-${Date.now()}`}
               bom={true}
               config={{
                 header: true,
                 skipEmptyLines: true,
               }}
             >
-              Download
+              download the report now!
             </CSVDownloader>
           </>
         )}
