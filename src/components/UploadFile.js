@@ -60,6 +60,7 @@ export default function UploadFile(props) {
           addRemoveButton
           config={{
             header: true,
+            skipEmptyLines: true,
           }}
         >
           {({ file }) => (

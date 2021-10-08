@@ -1,47 +1,20 @@
-import React, { useMemo } from "react";
-import { useTable, useSortBy } from "react-table";
+import React from "react";
 import { Button, Card, Divider, Spinner } from "@blueprintjs/core";
 
 export default function ParsedFilePing(props) {
-  const { tableData, handleStartChecking, processing } = props;
+  const { tableData, handleStartChecking, onUpdateData, processing } = props;
 
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: "URL",
-        accessor: "url",
-      },
-      {
-        Header: "Status",
-        accessor: "status",
-      },
-      {
-        Header: "Response Code",
-        accessor: "responseCode",
-      },
-      {
-        Header: "Asset Type",
-        accessor: "assetType",
-      },
-    ],
-    []
-  );
-
-  const data = useMemo(
-    () =>
-      tableData.map((element) => {
-        return {
-          url: element.data.URL,
-          status: null,
-          responseCode: null,
-          assetTye: null,
-        };
-      }),
-    [tableData]
-  );
-
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data }, useSortBy);
+  const Rows = tableData.map((element) => {
+    console.log(element);
+    return (
+      <tr key={element.data.url}>
+        <td>{element.data.url}</td>
+        <td>{element.data.status || null}</td>
+        <td>{element.data.responseCode || null}</td>
+        <td>{element.data.assetType || null}</td>
+      </tr>
+    );
+  });
 
   return (
     <Card>
@@ -49,7 +22,7 @@ export default function ParsedFilePing(props) {
         Found <strong>{tableData.length} URL</strong>.{" "}
         <Button
           intent="success"
-          text={processing ? "Processing! PLEASE WAIT!" : "Start Checking!"}
+          text={processing ? "Processing! PLEASE WAIT!" : "Start Processing!"}
           onClick={handleStartChecking}
           disabled={processing}
         ></Button>
@@ -57,42 +30,16 @@ export default function ParsedFilePing(props) {
       <Divider />
 
       <div className="card-actions">
-        <table {...getTableProps()}>
+        <table>
           <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  // Add the sorting props to control sorting. For this example
-                  // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render("Header")}
-                    {/* Add a sort direction indicator */}
-                    <span>
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? " 🔽"
-                          : " 🔼"
-                        : ""}
-                    </span>
-                  </th>
-                ))}
-              </tr>
-            ))}
+            <tr>
+              <th>URL</th>
+              <th>Status</th>
+              <th>Response Code</th>
+              <th>Asset Type</th>
+            </tr>
           </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
+          <tbody>{Rows}</tbody>
         </table>
       </div>
     </Card>

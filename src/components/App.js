@@ -33,18 +33,30 @@ export default class App extends Component {
     });
   };
 
-  handleStartChecking = async () => {
+  handleOnUpdateData = () => {
     this.setState({
       processing: true,
     });
+  };
 
+  handleStartChecking = async () => {
     // Traverse through each URL
     console.log(`Traverse through each URL`, this.state.data);
+
     const tableDataNow = this.state.data;
-    tableDataNow.forEach((element) => {
-      console.log(element);
+
+    await tableDataNow.forEach(async (element, index) => {
+      console.log(index, element);
       // Set value to spinners!
-      this.setState({});
+
+      const updatedData = {
+        url: element.data.url,
+        responseCode: 666,
+        assetType: "unknown",
+        status: "Online",
+      };
+
+      await this.setState((this.state.data[index].data = updatedData));
     });
     // Set the spinner for each URL
 
@@ -72,6 +84,7 @@ export default class App extends Component {
 
           {this.state.step === 2 && (
             <ParsedFilePing
+              onUpdateData={this.handleOnUpdateData}
               tableData={this.state.data}
               handleStartChecking={this.handleStartChecking}
               processing={this.state.processing}
