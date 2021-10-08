@@ -1,3 +1,7 @@
 main {
   padding: 10px 20px 20px 20px;
 }
+
+.card-actions {
+  margin-top: 1rem;
+}
