@@ -59,23 +59,52 @@ export default class App extends Component {
       // Do an axios GET call
       console.log("Doing the GET REQUESTS!!!", element);
 
-      await axios.get(element.data.url).then(async (response) => {
-        console.log(`Response for ${element.data.url}`, response);
-        const responseData = {
-          url: element.data.url,
-          responseCode: response.status,
-          assetType: response.headers["content-type"],
-          status:
-            response.status === 200 ||
-            response.status === 301 ||
-            response.status === 307 ||
-            response.status === 308
-              ? "Online"
-              : "Offline",
-        };
+      axios
+        .get(element.data.url, {
+          timeout: 1000,
+        })
+        .then(async (response) => {
+          const responseData = {
+            url: element.data.url,
+            responseCode: response.status,
+            assetType: response.headers["content-type"],
+            status:
+              response.status === 200 ||
+              response.status === 301 ||
+              response.status === 307 ||
+              response.status === 308
+                ? "Online"
+                : "Offline",
+          };
+          await this.setState((this.state.data[index].data = responseData));
+        })
+        .catch(async (error) => {
+          const responseData = {
+            url: element.data.url,
+            responseCode: error?.response?.status || "unknown",
+            assetType: "unknown",
+            status: "Offline",
+          };
+          await this.setState((this.state.data[index].data = responseData));
+        });
 
-        await this.setState((this.state.data[index].data = responseData));
-      });
+      // await axios.get(element.data.url).then(async (response) => {
+      //   console.log(`Response for ${element.data.url}`, response);
+      //   const responseData = {
+      //     url: element.data.url,
+      //     responseCode: response.status,
+      //     assetType: response.headers["content-type"],
+      //     status:
+      //       response.status === 200 ||
+      //       response.status === 301 ||
+      //       response.status === 307 ||
+      //       response.status === 308
+      //         ? "Online"
+      //         : "Offline",
+      //   };
+
+      //   await this.setState((this.state.data[index].data = responseData));
+      // });
       // Destroy the Spinner and return the response
     });
   };

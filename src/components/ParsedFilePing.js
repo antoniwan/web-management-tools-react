@@ -4,9 +4,10 @@ import { Button, Card, Divider, Spinner } from "@blueprintjs/core";
 export default function ParsedFilePing(props) {
   const { tableData, handleStartChecking, processing } = props;
 
-  const Rows = tableData.map((element) => {
+  const Rows = tableData.map((element, index) => {
     return (
-      <tr key={element.data.url}>
+      <tr key={`${element.data.url}-${index}`}>
+        <td>{index + 1}</td>
         <td>
           <a href={element.data.url} target="_blank" rel="noreferrer">
             {element.data.url}
@@ -45,6 +46,7 @@ export default function ParsedFilePing(props) {
         <table>
           <thead>
             <tr>
+              <th>#</th>
               <th>URL</th>
               <th>Status</th>
               <th>Response Code</th>
