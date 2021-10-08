@@ -1,8 +1,9 @@
 import React from "react";
+import { CSVDownloader } from "react-papaparse";
 import { Button, Card, Divider, Spinner } from "@blueprintjs/core";
 
 export default function ParsedFilePing(props) {
-  const { tableData, handleStartChecking, processing } = props;
+  const { tableData, handleStartChecking, processing, complete } = props;
 
   const Rows = tableData.map((element, index) => {
     return (
@@ -29,12 +30,38 @@ export default function ParsedFilePing(props) {
     <Card>
       <p>
         Found <strong>{tableData.length} URL</strong>.{" "}
-        <Button
-          intent="success"
-          text={processing ? "Processing! PLEASE WAIT!" : "Start Processing!"}
-          onClick={handleStartChecking}
-          disabled={processing}
-        ></Button>
+        {!complete && (
+          <Button
+            intent="warning"
+            text={processing ? "Processing! PLEASE WAIT!" : "Start Processing!"}
+            onClick={handleStartChecking}
+            disabled={processing}
+          ></Button>
+        )}
+        {complete && (
+          <>
+            Check completed, download report now!
+            <CSVDownloader
+              data={tableData.map((element, index) => {
+                return {
+                  URL: element.data.url,
+                  STATUS: element.data.status,
+                  "RESPONSE CODE": element.data.responseCode,
+                  "ASSET TYPE": element.data.assetType,
+                };
+              })}
+              type="button"
+              filename={`url-checker`}
+              bom={true}
+              config={{
+                header: true,
+                skipEmptyLines: true,
+              }}
+            >
+              Download
+            </CSVDownloader>
+          </>
+        )}
       </p>
       <Divider />
 

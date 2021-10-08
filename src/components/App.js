@@ -54,7 +54,6 @@ export default class App extends Component {
           assetType: null,
           status: null,
         };
-
         await this.setState((this.state.data[index].data = updatedData));
 
         // Do an axios GET call
@@ -78,14 +77,13 @@ export default class App extends Component {
             await this.setState((this.state.data[index].data = responseData));
           })
           .catch(async (error) => {
-            console.log(`Error found for ${element.data.url}:`, error);
-            const responseData = {
+            const errorData = {
               url: element.data.url,
               responseCode: error?.response?.status || "unknown",
               assetType: "unknown",
               status: "Offline",
             };
-            await this.setState((this.state.data[index].data = responseData));
+            await this.setState((this.state.data[index].data = errorData));
           });
 
         if (index === array.length - 1) resolve();
