@@ -6,6 +6,8 @@ import UploadFile from "./UploadFile";
 import ParsedFilePing from "./ParsedFilePing";
 import "./App.css";
 
+let theActualTableData = null;
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -17,21 +19,13 @@ export default class App extends Component {
     };
   }
 
-  handleClickGetStarted = () => {
-    this.setState({
-      step: 1,
-    });
-  };
-
   handleOnFileLoad = (data) => {
-    this.setState({
-      data: data,
-    });
+    theActualTableData = data;
   };
 
   handleOnProceedWithCSV = () => {
     this.setState({
-      step: 2,
+      step: 1,
     });
   };
 
@@ -44,9 +38,10 @@ export default class App extends Component {
     // Traverse through each URL
 
     const tableDataNow = this.state.data;
+    console.log(tableDataNow, theActualTableData)
 
     let forEachResolved = new Promise((resolve, reject) => {
-      tableDataNow.forEach(async (element, index, array) => {
+      theActualTableData.forEach(async (element, index, array) => {
         // Set the spinner for each URL
         const updatedData = {
           url: element.data.url,
@@ -54,7 +49,7 @@ export default class App extends Component {
           assetType: null,
           status: null,
         };
-        await this.setState((this.state.data[index].data = updatedData));
+
 
         // Do an axios GET call
         await axios
@@ -74,7 +69,9 @@ export default class App extends Component {
                   ? "Online"
                   : "Offline",
             };
-            await this.setState((this.state.data[index].data = responseData));
+            // await this.setState((this.state.data[index].data = responseData));
+            theActualTableData[index] = responseData;
+
           })
           .catch(async (error) => {
             const errorData = {
@@ -83,7 +80,8 @@ export default class App extends Component {
               assetType: "unknown",
               status: "Offline",
             };
-            await this.setState((this.state.data[index].data = errorData));
+            // await this.setState((this.state.data[index].data = errorData));
+            theActualTableData[index] = errorData;
           });
 
         if (index === array.length - 1) resolve();
@@ -106,19 +104,15 @@ export default class App extends Component {
           <h1>URL Status Checker</h1>
 
           {this.state.step === 0 && (
-            <GetStarted handleClick={this.handleClickGetStarted} />
-          )}
-
-          {this.state.step === 1 && (
             <UploadFile
               handleOnFileLoad={this.handleOnFileLoad}
               handleOnProceedWithCSV={this.handleOnProceedWithCSV}
             />
           )}
 
-          {this.state.step === 2 && (
+          {this.state.step === 1 && (
             <ParsedFilePing
-              tableData={this.state.data}
+              tableData={theActualTableData}
               handleStartChecking={this.handleStartChecking}
               processing={this.state.processing}
               complete={this.state.complete}

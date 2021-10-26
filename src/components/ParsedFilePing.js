@@ -5,30 +5,10 @@ import { Button, Card, Divider, Spinner } from "@blueprintjs/core";
 export default function ParsedFilePing(props) {
   const { tableData, handleStartChecking, processing, complete } = props;
 
-  const Rows = tableData.map((element, index) => {
-    return (
-      <tr key={`${element.data.url}-${index}`}>
-        <td>{index + 1}</td>
-        <td>
-          <a href={element.data.url} target="_blank" rel="noreferrer">
-            {element.data.url}
-          </a>
-        </td>
-        <td>
-          {element.data.status === null && <CustomSpinner />}
-          {element.data.status && <>{element.data.status}</>}
-        </td>
-        <td>
-          {element.data.responseCode === null && <CustomSpinner />}
-          {element.data.responseCode && <>{element.data.responseCode}</>}
-        </td>
-      </tr>
-    );
-  });
-
+  console.log(tableData);
   return (
     <Card>
-      <p>
+      <p style={{ "marginBottom": "0px"}}>
         Found <strong>{tableData.length} URL</strong>.{" "}
         {!complete && (
           <Button
@@ -41,13 +21,18 @@ export default function ParsedFilePing(props) {
         {complete && (
           <>
             Check completed!!!{" "}
+            
+
+            
+            
+            
             <CSVDownloader
               data={tableData.map((element, index) => {
                 return {
-                  url: element.data.url,
-                  status: element.data.status,
-                  "response code": element.data.responseCode,
-                  "asset type": element.data.assetType,
+                  url: element.url,
+                  status: element.status,
+                  "response code": element.responseCode,
+                  "asset type": element.assetType,
                 };
               })}
               type="button"
@@ -64,21 +49,7 @@ export default function ParsedFilePing(props) {
           </>
         )}
       </p>
-      <Divider />
 
-      <div className="card-actions">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>URL</th>
-              <th>Status</th>
-              <th>Response Code</th>
-            </tr>
-          </thead>
-          <tbody>{Rows}</tbody>
-        </table>
-      </div>
     </Card>
   );
 }
