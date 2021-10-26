@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
 import WMTNavbar from "./WMTNavbar";
-import GetStarted from "./GetStarted";
 import UploadFile from "./UploadFile";
 import ParsedFilePing from "./ParsedFilePing";
 import "./App.css";
@@ -37,18 +36,8 @@ export default class App extends Component {
 
     // Traverse through each URL
 
-    const tableDataNow = this.state.data;
-
     let forEachResolved = new Promise((resolve, reject) => {
       theActualTableData.forEach(async (element, index, array) => {
-        // Set the spinner for each URL
-        const updatedData = {
-          url: element.data.url,
-          responseCode: null,
-          assetType: null,
-          status: null,
-        };
-
 
         // Do an axios GET call
         await axios
@@ -117,6 +106,10 @@ export default class App extends Component {
               complete={this.state.complete}
             />
           )}
+          
+
+          <p style={{marginTop: "2rem"}}>vOCT26-1</p>
+          
         </main>
       </div>
     );

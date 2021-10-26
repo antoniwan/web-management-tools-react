@@ -1,6 +1,6 @@
 import React from "react";
 import { CSVDownloader } from "react-papaparse";
-import { Button, Card, Divider, Spinner } from "@blueprintjs/core";
+import { Button, Card } from "@blueprintjs/core";
 
 export default function ParsedFilePing(props) {
   const { tableData, handleStartChecking, processing, complete } = props;
@@ -47,8 +47,4 @@ export default function ParsedFilePing(props) {
 
     </Card>
   );
-}
-
-function CustomSpinner() {
-  return <Spinner size={20} />;
 }
