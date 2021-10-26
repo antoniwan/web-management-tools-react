@@ -5,7 +5,8 @@ import { Button, Card, Divider, Spinner } from "@blueprintjs/core";
 export default function ParsedFilePing(props) {
   const { tableData, handleStartChecking, processing, complete } = props;
 
-  console.log(tableData);
+  console.log(`tableData --> `, tableData);
+
   return (
     <Card>
       <p style={{ "marginBottom": "0px"}}>
@@ -22,11 +23,7 @@ export default function ParsedFilePing(props) {
           <>
             Check completed!!!{" "}
             
-
-            
-            
-            
-            <CSVDownloader
+            {!processing && complete && <CSVDownloader
               data={tableData.map((element, index) => {
                 return {
                   url: element.url,
@@ -41,11 +38,11 @@ export default function ParsedFilePing(props) {
               bom={true}
               config={{
                 header: true,
-                skipEmptyLines: true,
+                skipEmptyLines: false,
               }}
             >
               Download the report now!
-            </CSVDownloader>
+            </CSVDownloader>}
           </>
         )}
       </p>
