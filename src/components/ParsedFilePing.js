@@ -5,8 +5,6 @@ import { Button, Card, Divider, Spinner } from "@blueprintjs/core";
 export default function ParsedFilePing(props) {
   const { tableData, handleStartChecking, processing, complete } = props;
 
-  console.log(`tableData --> `, tableData);
-
   return (
     <Card>
       <p style={{ "marginBottom": "0px"}}>

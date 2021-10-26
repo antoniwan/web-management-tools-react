@@ -14,7 +14,6 @@ export default function UploadFile(props) {
   }
 
   function handleOnError(err, file, inputElement, reason) {
-    console.log(err, file, inputElement, reason);
     alert(reason);
   }
 

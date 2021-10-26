@@ -38,7 +38,6 @@ export default class App extends Component {
     // Traverse through each URL
 
     const tableDataNow = this.state.data;
-    console.log(tableDataNow, theActualTableData)
 
     let forEachResolved = new Promise((resolve, reject) => {
       theActualTableData.forEach(async (element, index, array) => {
